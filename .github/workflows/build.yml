@@ -30,6 +30,21 @@ jobs:
       - name: Install Expo CLI
         run: npm install -g expo-cli @expo/ngrok
 
+      - name: Create placeholder icon
+        run: |
+          mkdir -p assets
+          convert -size 1024x1024 xc:#0f0f0f assets/icon.png 2>/dev/null || \
+          python3 -c "
+import struct, zlib
+def png(w,h,color):
+    def chunk(t,d):
+        c=zlib.crc32(t+d)&0xffffffff
+        return struct.pack('>I',len(d))+t+d+struct.pack('>I',c)
+    raw=b''.join(b'\x00'+bytes(color)*w for _ in range(h))
+    return b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',w,h,8,2,0,0,0))+chunk(b'IDAT',zlib.compress(raw))+chunk(b'IEND',b'')
+open('assets/icon.png','wb').write(png(1024,1024,[15,15,15]))
+"
+
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
