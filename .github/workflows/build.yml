@@ -38,10 +38,17 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
-      - name: Pin Gradle to 8.10.2
+      - name: Patch Gradle and Kotlin versions
         run: |
+          # Pin Gradle to 8.10.2
           sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
-          cat android/gradle/wrapper/gradle-wrapper.properties
+          # Patch Kotlin version to 2.0.21 in build.gradle
+          sed -i 's/kotlinVersion = "[^"]*"/kotlinVersion = "2.0.21"/' android/build.gradle
+          sed -i 's/kotlin_version = "[^"]*"/kotlin_version = "2.0.21"/' android/build.gradle
+          sed -i "s/kotlinVersion = '[^']*'/kotlinVersion = '2.0.21'/" android/build.gradle
+          sed -i "s/kotlin_version = '[^']*'/kotlin_version = '2.0.21'/" android/build.gradle
+          echo "--- android/build.gradle ---"
+          cat android/build.gradle
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
