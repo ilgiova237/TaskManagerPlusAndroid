@@ -38,20 +38,10 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
-      - name: Find and patch Kotlin 1.9.25 everywhere
+      - name: Pin Gradle to 8.10.2
         run: |
-          echo "=== Files containing 1.9.25 ==="
-          grep -r "1\.9\.25" android/ --include="*.gradle" --include="*.properties" --include="*.kts" -l || echo "none found in android/"
-          echo "=== Patching all gradle files ==="
-          find android/ -name "*.gradle" -o -name "*.kts" -o -name "*.properties" | xargs grep -l "1\.9\.25" 2>/dev/null | while read f; do
-            echo "Patching: $f"
-            sed -i 's/1\.9\.25/2.0.21/g' "$f"
-          done
-          echo "=== Patch Gradle wrapper ==="
           sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
-          echo "=== Verifying ==="
-          grep -r "1\.9\.25" android/ || echo "No more 1.9.25 found"
-          grep -r "2\.0\.21" android/ --include="*.gradle" --include="*.kts" | head -5
+          cat android/gradle/wrapper/gradle-wrapper.properties
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
