@@ -25,23 +25,24 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Expo
-        uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
       - name: Install dependencies
         run: npm install
 
-      - name: Build APK (local, no Expo servers)
+      - name: Install Expo CLI
+        run: npm install -g expo-cli @expo/ngrok
+
+      - name: Prebuild Android
+        run: npx expo prebuild --platform android --clean --no-install
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build APK
         run: |
-          npx expo prebuild --platform android --clean
           cd android
           ./gradlew assembleRelease --no-daemon
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: TaskManagerPlus-APK
