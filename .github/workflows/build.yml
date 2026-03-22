@@ -38,6 +38,11 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
+      - name: Downgrade Gradle to 8.6 (fixes Kotlin 2.2 incompatibility)
+        run: |
+          sed -i 's|gradle-.*-bin.zip|gradle-8.6-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
+          cat android/gradle/wrapper/gradle-wrapper.properties
+
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
