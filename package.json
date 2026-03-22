@@ -13,7 +13,7 @@
     "expo-file-system": "~55.0.11",
     "expo-status-bar": "~55.0.4",
     "react": "18.3.1",
-    "react-native": "0.76.9",
+    "react-native": "0.77.3",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/bottom-tabs": "^6.5.20",
     "react-native-safe-area-context": "^5.7.0",
