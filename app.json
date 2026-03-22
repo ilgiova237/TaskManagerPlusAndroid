@@ -3,6 +3,7 @@
     "name": "TaskManager+",
     "slug": "taskmanagerplus",
     "version": "1.0.0",
+    "sdkVersion": "52.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#0f0f0f",
