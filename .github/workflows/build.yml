@@ -28,12 +28,11 @@ jobs:
         run: npm install
 
       - name: Install Expo CLI
-        run: npm install -g expo-cli @expo/ngrok
+        run: npm install -g expo-cli
 
       - name: Create placeholder icon
         run: |
           mkdir -p assets
-          convert -size 1024x1024 xc:#0f0f0f assets/icon.png 2>/dev/null || \
           python3 -c "
 import struct, zlib
 def png(w,h,color):
