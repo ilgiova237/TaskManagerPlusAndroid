@@ -11,15 +11,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#0f0f0f"
       },
-      "package": "com.g23.taskmanagerplus",
-      "permissions": [
-        "android.permission.PACKAGE_USAGE_STATS",
-        "android.permission.READ_PHONE_STATE"
-      ]
-    },
-    "plugins": [
-      "expo-battery",
-      "expo-device"
-    ]
+      "package": "com.g23.taskmanagerplus"
+    }
   }
 }
