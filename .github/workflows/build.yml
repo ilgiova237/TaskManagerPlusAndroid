@@ -42,16 +42,13 @@ jobs:
         run: |
           sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
 
-      - name: Show app/build.gradle for debugging
-        run: cat android/app/build.gradle
-
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
       - name: Build APK
         run: |
           cd android
-          ./gradlew assembleRelease --no-daemon --stacktrace 2>&1 | head -100
+          ./gradlew assembleRelease --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
