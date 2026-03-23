@@ -38,13 +38,6 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
-      - name: Pin Gradle to 8.10.2
-        run: |
-          sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
-
-      - name: Patch app/build.gradle
-        run: python3 patch_gradle.py
-
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
