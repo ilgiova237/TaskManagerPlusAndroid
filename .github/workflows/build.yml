@@ -42,8 +42,31 @@ jobs:
         run: |
           sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
 
-      - name: Show app/build.gradle
-        run: cat -n android/app/build.gradle
+      - name: Patch app/build.gradle react-native path
+        run: |
+          echo "=== app/build.gradle ===" 
+          cat -n android/app/build.gradle
+          echo "=== Patching ==="
+          # Fix null getAbsolutePath - replace the react-native path resolution
+          sed -i 's|new File(\["node", "--print".*\]\.execute()\.text\.trim())|new File(project.projectDir, "../../node_modules/react-native")|g' android/app/build.gradle
+          # Alternative: find any line with execute().text.trim() and fix it
+          python3 - << 'PYEOF'
+          import re
+          with open('android/app/build.gradle', 'r') as f:
+              content = f.read()
+          # Replace the problematic node execution with a direct path
+          fixed = re.sub(
+              r'new File\(\[.*?execute\(\)\.text\.trim\(\)\)',
+              'new File(rootProject.projectDir, "../node_modules/react-native")',
+              content,
+              flags=re.DOTALL
+          )
+          with open('android/app/build.gradle', 'w') as f:
+              f.write(fixed)
+          print("Done patching")
+          PYEOF
+          echo "=== After patch ==="
+          cat -n android/app/build.gradle
 
       - name: Make gradlew executable
         run: chmod +x android/gradlew
