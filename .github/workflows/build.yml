@@ -38,6 +38,19 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
+      - name: Patch serviceOf for Gradle 8.10 compatibility
+        run: |
+          FILE="node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build.gradle.kts"
+          if [ -f "$FILE" ]; then
+            sed -i 's|import org.gradle.configurationcache.extensions.serviceOf||g' "$FILE"
+            sed -i 's|serviceOf<ModuleRegistry>()|project.gradle.sharedServices.registrations.getByName("moduleRegistry")?.service?.get() as? ModuleRegistry ?: error("ModuleRegistry not found")|g' "$FILE"
+            # Simpler fix: just comment out the problematic lines
+            sed -i 's|import org.gradle.configurationcache.extensions.serviceOf|// serviceOf import removed for Gradle 8.10 compat|g' "$FILE"
+            sed -i 's|serviceOf<ModuleRegistry>()|gradle.sharedServices.registrations.getByName("moduleRegistry").service.get() as ModuleRegistry|g' "$FILE"
+            echo "Patched $FILE"
+            head -60 "$FILE"
+          fi
+
       - name: Pin Gradle to 8.10.2
         run: |
           sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-bin.zip|g' android/gradle/wrapper/gradle-wrapper.properties
