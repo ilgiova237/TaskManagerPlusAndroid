@@ -38,6 +38,10 @@ jobs:
       - name: Prebuild Android
         run: npx expo prebuild --platform android --clean --no-install
 
+      - name: Pin Gradle to 8.7
+        run: |
+          sed -i 's|distributionUrl=.*|distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip|g' android/gradle/wrapper/gradle-wrapper.properties
+
       - name: Make gradlew executable
         run: chmod +x android/gradlew
 
